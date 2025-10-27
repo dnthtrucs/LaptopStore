@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import {
   Users,
   ShoppingBag,
@@ -6,13 +6,25 @@ import {
   BarChart3,
   Bell,
   Search,
+  LogOut,
 } from "lucide-react";
+import { useNavigate } from "react-router-dom";
 
 export default function AdminDashboard() {
+  const navigate = useNavigate();
+  const [showMenu, setShowMenu] = useState(false);
+
+  const handleLogout = () => {
+    // 🔸 Xóa token đăng nhập nếu có
+    localStorage.removeItem("token");
+    // 🔸 Chuyển về trang đăng nhập
+    navigate("/login");
+  };
+
   return (
-    <div className="flex flex-col flex-1 bg-[#f9f9fc] min-h-screen">
+    <div className="flex flex-col flex-1 bg-[#f9f9fc] min-h-screen relative">
       {/* 🔹 Topbar */}
-      <header className="flex items-center justify-between bg-white px-6 py-3 border-b shadow-sm">
+      <header className="flex items-center justify-between bg-white px-6 py-3 border-b shadow-sm relative">
         <div className="flex items-center gap-2 bg-gray-100 px-3 py-2 rounded-lg w-96">
           <Search size={18} className="text-gray-400" />
           <input
@@ -22,33 +34,49 @@ export default function AdminDashboard() {
           />
         </div>
 
-        <div className="flex items-center gap-5">
+        <div className="flex items-center gap-5 relative">
           <Bell className="text-gray-600 cursor-pointer" />
           <img
             src="https://flagcdn.com/w40/vn.png"
             alt="VN"
             className="w-6 h-4 rounded-sm border"
           />
-          <div className="flex items-center gap-2">
-            <img
-              src="https://i.pravatar.cc/40?img=47"
-              alt="Admin"
-              className="w-8 h-8 rounded-full"
-            />
-            <div className="text-sm leading-tight">
-              <p className="font-medium">Mai mờ</p>
-              <p className="text-gray-400 text-xs">Admin</p>
+          <div className="relative">
+            <div
+              className="flex items-center gap-2 cursor-pointer"
+              onClick={() => setShowMenu(!showMenu)}
+            >
+              <img
+                src="https://i.pravatar.cc/40?img=47"
+                alt="Admin"
+                className="w-8 h-8 rounded-full"
+              />
+              <div className="text-sm leading-tight">
+                <p className="font-medium">Mai mờ</p>
+                <p className="text-gray-400 text-xs">Admin</p>
+              </div>
             </div>
+
+            {/* 🔸 Dropdown menu */}
+            {showMenu && (
+              <div className="absolute right-0 mt-2 w-40 bg-white shadow-lg rounded-lg border py-2 z-50">
+                <button
+                  onClick={handleLogout}
+                  className="flex items-center gap-2 w-full px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
+                >
+                  <LogOut size={16} /> Đăng xuất
+                </button>
+              </div>
+            )}
           </div>
         </div>
       </header>
 
       {/* 🔹 Main content */}
       <main className="flex-1 p-6 space-y-6">
-        {/* Title */}
         <h1 className="text-2xl font-semibold">Dashboard</h1>
 
-        {/* 🔸 Cards */}
+        {/* Thống kê */}
         <div className="grid grid-cols-4 gap-6">
           <div className="bg-white shadow rounded-xl p-5 flex items-center justify-between">
             <div>
